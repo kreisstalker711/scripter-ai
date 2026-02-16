@@ -26,6 +26,11 @@ body {
     padding: 2rem 1rem;
     line-height: 1.6;
 }
+.logo {
+    width: 90%;
+    height: 100%;
+    margin-bottom: 0.5rem;
+}
 
 .container {
     max-width: 800px;

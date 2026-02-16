@@ -24,6 +24,9 @@ form.addEventListener("submit", async (e) => {
         });
 
         const result = await response.json();
+        console.log("API RESPONSE:", result);
+        console.log("STATUS:", response.status);
+
 
         if (!response.ok) {
             throw new Error(result.message || "Error generating content");
