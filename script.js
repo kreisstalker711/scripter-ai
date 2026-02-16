@@ -3,6 +3,8 @@ const output = document.getElementById("output");
 const outputSection = document.getElementById("outputSection");
 const errorSection = document.getElementById("errorSection");
 const errorMessage = document.getElementById("errorMessage");
+const copyBtn = document.getElementById("copyBtn");
+const downloadBtn = document.getElementById("downloadBtn");
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -45,4 +47,39 @@ form.addEventListener("submit", async (e) => {
         errorSection.style.display = "block";
         outputSection.style.display = "none";
     }
+});
+
+copyBtn.addEventListener("click", () => {
+    const text = output.innerText;
+    if (!text) return;
+
+    navigator.clipboard.writeText(text).then(() => {
+        const originalHtml = copyBtn.innerHTML;
+        copyBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Copied!
+        `;
+        setTimeout(() => {
+            copyBtn.innerHTML = originalHtml;
+        }, 2000);
+    }).catch(err => {
+        console.error("Failed to copy:", err);
+    });
+});
+
+downloadBtn.addEventListener("click", () => {
+    const text = output.innerText;
+    if (!text) return;
+
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "generated-content.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 });

@@ -205,7 +205,8 @@ select {
     font-weight: 600;
 }
 
-.btn-copy {
+.btn-copy,
+.btn-download {
     background: var(--bg-secondary);
     border: 2px solid var(--border-color);
     color: var(--text-primary);
@@ -220,13 +221,15 @@ select {
     transition: all 0.3s ease;
 }
 
-.btn-copy:hover {
+.btn-copy:hover,
+.btn-download:hover {
     background: var(--accent);
     border-color: var(--accent);
     transform: translateY(-2px);
 }
 
-.btn-copy:active {
+.btn-copy:active,
+.btn-download:active {
     transform: translateY(0);
 }
 
@@ -327,7 +330,8 @@ select {
         gap: 1rem;
     }
 
-    .btn-copy {
+    .btn-copy,
+    .btn-download {
         width: 100%;
         justify-content: center;
     }
