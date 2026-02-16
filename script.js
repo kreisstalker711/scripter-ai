@@ -1,5 +1,8 @@
 const form = document.getElementById("scriptForm");
 const output = document.getElementById("output");
+const outputSection = document.getElementById("outputSection");
+const errorSection = document.getElementById("errorSection");
+const errorMessage = document.getElementById("errorMessage");
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -28,7 +31,15 @@ form.addEventListener("submit", async (e) => {
 
         output.innerHTML = result.content;
 
+        // 🔥 SHOW OUTPUT
+        outputSection.style.display = "block";
+        errorSection.style.display = "none";
+
     } catch (err) {
-        output.innerHTML = "Error: " + err.message;
+        errorMessage.innerText = err.message;
+
+        // 🔥 SHOW ERROR SECTION
+        errorSection.style.display = "block";
+        outputSection.style.display = "none";
     }
 });
