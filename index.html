@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scripter AI – Smart Writing Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <header class="header">
+                <h1>✍️ Scripter AI</h1>
+                <p class="subtitle">Smart Writing Assistant</p>
+            </header>
+
+            <form id="scriptForm" class="form">
+                <div class="form-group">
+                    <label for="contentType">Content Type</label>
+                    <select id="contentType" name="contentType" required>
+                        <option value="">Select type...</option>
+                        <option value="Essay">Essay</option>
+                        <option value="Document">Document</option>
+                        <option value="Story">Story</option>
+                        <option value="Speech">Speech</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tone">Tone</label>
+                    <select id="tone" name="tone" required>
+                        <option value="">Select tone...</option>
+                        <option value="Formal">Formal</option>
+                        <option value="Casual">Casual</option>
+                        <option value="Academic">Academic</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="wordLimit">Word Limit</label>
+                    <input 
+                        type="number" 
+                        id="wordLimit" 
+                        name="wordLimit" 
+                        placeholder="e.g., 500"
+                        min="50"
+                        max="2000"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="topic">Topic</label>
+                    <textarea 
+                        id="topic" 
+                        name="topic" 
+                        rows="4"
+                        placeholder="Describe what you want to write about..."
+                        required
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="btn-generate" id="generateBtn">
+                    <span class="btn-text">Generate Content</span>
+                    <span class="loader" style="display: none;"></span>
+                </button>
+            </form>
+
+            <div id="outputSection" class="output-section" style="display: none;">
+                <div class="output-header">
+                    <h2>Generated Content</h2>
+                    <button id="copyBtn" class="btn-copy" title="Copy to clipboard">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copy
+                    </button>
+                </div>
+                <div id="output" class="output"></div>
+            </div>
+
+            <div id="errorSection" class="error-section" style="display: none;">
+                <div class="error-message">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span id="errorMessage"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

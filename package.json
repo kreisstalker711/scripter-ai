@@ -1,0 +1,14 @@
+{
+  "name": "scripter-ai",
+  "version": "1.0.0",
+  "description": "Scripter AI - Smart Writing Assistant powered by Groq",
+  "type": "module",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "groq-sdk": "^0.8.0"
+  }
+}
