@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scribr AI – Templates</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary:     #0f172a;
+      --bg-secondary:   #1e293b;
+      --bg-card:        #1e293b;
+      --border-color:   #334155;
+      --text-primary:   #f1f5f9;
+      --text-secondary: #94a3b8;
+      --accent:         #3b82f6;
+      --purple:         #8b5cf6;
+      --success:        #10b981;
+      --error:          #ef4444;
+      --cyan:           #06b6d4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* Ambient blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.09;
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 16s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 700px; height: 700px; background: var(--accent);  top: -200px; left: -200px; animation-delay: 0s; }
+    .blob-2 { width: 550px; height: 550px; background: var(--purple); bottom: -150px; right: -150px; animation-delay: -6s; }
+    .blob-3 { width: 350px; height: 350px; background: var(--cyan);   top: 45%; left: 60%; animation-delay: -11s; }
+
+    @keyframes drift {
+      0%   { transform: translate(0,0) scale(1); }
+      50%  { transform: translate(35px,-25px) scale(1.05); }
+      100% { transform: translate(-20px,30px) scale(0.97); }
+    }
+
+    /* ══════════════════════════════
+       NAV
+    ══════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 6%;
+      background: rgba(15,23,42,0.75);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(51,65,85,0.4);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .nav-links a.active { color: var(--text-primary); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: white !important;
+      padding: 0.52rem 1.3rem;
+      border-radius: 8px;
+      font-weight: 600 !important;
+      font-size: 0.85rem !important;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s, transform 0.2s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ══════════════════════════════
+       PAGE HERO
+    ══════════════════════════════ */
+    .page-hero {
+      position: relative;
+      padding: 9rem 6% 4.5rem;
+      text-align: center;
+      z-index: 1;
+    }
+
+    /* Grid lines */
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 20%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.28);
+      border-radius: 100px;
+      padding: 0.38rem 1rem;
+      font-size: 0.78rem;
+      color: #93c5fd;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+      margin-bottom: 1.8rem;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .badge-dot {
+      width: 5px; height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.65); }
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      max-width: 680px;
+      margin: 0 auto 1.2rem;
+      animation: fadeUp 0.6s 0.08s ease both;
+    }
+
+    .hero-title .grad {
+      background: linear-gradient(135deg, #93c5fd, #c4b5fd 50%, #67e8f9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+      font-weight: 300;
+      animation: fadeUp 0.6s 0.16s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════════════════════
+       FILTER TABS
+    ══════════════════════════════ */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 0 6% 3.5rem;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.6s 0.24s ease both;
+    }
+
+    .filter-btn {
+      background: rgba(30,41,59,0.7);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      letter-spacing: 0.01em;
+    }
+
+    .filter-btn:hover {
+      border-color: rgba(59,130,246,0.45);
+      color: var(--text-primary);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 18px rgba(59,130,246,0.3);
+    }
+
+    /* ══════════════════════════════
+       SECTION HEADING
+    ══════════════════════════════ */
+    .templates-main {
+      padding: 0 6% 6rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-group {
+      margin-bottom: 4.5rem;
+    }
+
+    .section-group-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-group-icon {
+      width: 42px; height: 42px;
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .icon-essay    { background: rgba(59,130,246,0.15); }
+    .icon-doc      { background: rgba(139,92,246,0.15); }
+
+    .section-group-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .section-group-count {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      background: rgba(51,65,85,0.5);
+      border: 1px solid var(--border-color);
+      border-radius: 100px;
+      padding: 0.18rem 0.7rem;
+      font-weight: 500;
+      margin-left: auto;
+    }
+
+    .divider {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(51,65,85,0.8), transparent);
+    }
+
+    /* ══════════════════════════════
+       TEMPLATE GRID
+    ══════════════════════════════ */
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ══════════════════════════════
+       TEMPLATE CARD
+    ══════════════════════════════ */
+    .tpl-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: default;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease, border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .tpl-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tpl-card:hover {
+      border-color: rgba(59,130,246,0.4);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      transform: translateY(-4px) !important;
+    }
+
+    /* Card top accent stripe */
+    .tpl-stripe {
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--purple));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tpl-card:hover .tpl-stripe { opacity: 1; }
+
+    /* Card header */
+    .tpl-head {
+      padding: 1.5rem 1.5rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .tpl-emoji-wrap {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    .tpl-meta { flex: 1; }
+
+    .tpl-number {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .tpl-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.02rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .tpl-tag {
+      font-size: 0.7rem;
+      padding: 0.18rem 0.65rem;
+      border-radius: 100px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 0.4rem;
+      display: inline-block;
+    }
+
+    .tag-essay    { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+    .tag-doc      { background: rgba(139,92,246,0.12); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
+
+    /* Card body — collapsible structure preview */
+    .tpl-body {
+      padding: 0 1.5rem 0;
+      flex: 1;
+    }
+
+    .tpl-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin-bottom: 1.1rem;
+      opacity: 0.5;
+    }
+
+    .tpl-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-bottom: 1.25rem;
+    }
+
+    .tpl-section-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+    }
+
+    .tpl-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--border-color);
+      margin-top: 0.42rem;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .tpl-card:hover .tpl-dot { background: var(--accent); }
+
+    .tpl-section-name {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .tpl-section-name strong {
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+
+    /* Expand / collapse toggle */
+    .tpl-expand-btn {
+      width: 100%;
+      background: none;
+      border: none;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.75rem 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s, background 0.2s;
+      text-align: left;
+    }
+
+    .tpl-expand-btn:hover {
+      color: var(--accent);
+      background: rgba(59,130,246,0.04);
+    }
+
+    .tpl-expand-btn svg {
+      transition: transform 0.3s;
+    }
+
+    .tpl-expand-btn.open svg { transform: rotate(180deg); }
+
+    /* Expanded detail */
+    .tpl-detail {
+      display: none;
+      padding: 0 1.5rem 1rem;
+      border-top: 1px solid rgba(51,65,85,0.4);
+      background: rgba(15,23,42,0.4);
+    }
+
+    .tpl-detail.open { display: block; }
+
+    .tpl-sub-list {
+      list-style: none;
+      padding: 1rem 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .tpl-sub-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      font-size: 0.81rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .tpl-sub-item::before {
+      content: '→';
+      color: rgba(59,130,246,0.5);
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+
+    .tpl-sub-heading {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin: 1rem 0 0.4rem;
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* Card footer — Use Template button */
+    .tpl-footer {
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .btn-use-template {
+      width: 100%;
+      background: rgba(59,130,246,0.08);
+      border: 1.5px solid rgba(59,130,246,0.2);
+      color: #60a5fa;
+      padding: 0.65rem 1rem;
+      border-radius: 9px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.2s, box-shadow 0.25s;
+    }
+
+    .btn-use-template:hover {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border-color: transparent;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(59,130,246,0.3);
+    }
+
+    /* ══════════════════════════════
+       BOTTOM CTA
+    ══════════════════════════════ */
+    .cta-section {
+      padding: 2rem 6% 6rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 4rem 3rem;
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 55% at 50% 0%, rgba(59,130,246,0.12), transparent),
+        radial-gradient(ellipse 60% 45% at 50% 100%, rgba(139,92,246,0.1), transparent);
+      pointer-events: none;
+    }
+
+    .cta-card > * { position: relative; z-index: 1; }
+
+    .cta-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.8rem;
+    }
+
+    .cta-sub {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 2.2rem;
+      font-weight: 300;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: white;
+      padding: 0.9rem 2.2rem;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      box-shadow: 0 8px 28px rgba(59,130,246,0.32);
+      transition: transform 0.25s, box-shadow 0.25s;
+      letter-spacing: 0.01em;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 38px rgba(59,130,246,0.44);
+    }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    footer {
+      padding: 2.5rem 6%;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-copy { color: var(--text-secondary); font-size: 0.8rem; }
+
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 5%; }
+      .nav-links li:not(:last-child) { display: none; }
+      .templates-grid { grid-template-columns: 1fr; }
+      .cta-card { padding: 3rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="landing.html" class="nav-logo">Scribr AI</a>
+    <ul class="nav-links">
+      <li><a href="landing.html">Home</a></li>
+      <li><a href="#" class="active">Templates</a></li>
+      <li><a href="generate.html" class="nav-cta">Try for Free →</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      10 Ready-to-use Templates
+    </div>
+    <h1 class="hero-title">
+      Start with a<br/>
+      <span class="grad">proven structure.</span>
+    </h1>
+    <p class="hero-sub">
+      Pick a template, fill in your topic, and generate polished content in seconds. Every format covered — essays, docs, and more.
+    </p>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All Templates</button>
+    <button class="filter-btn" data-filter="essay">📝 Essays</button>
+    <button class="filter-btn" data-filter="document">📄 Documents</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="templates-main">
+
+    <!-- ─── ESSAY TEMPLATES ─── -->
+    <div class="section-group" data-group="essay">
+      <div class="section-group-header">
+        <div class="section-group-icon icon-essay">📝</div>
+        <span class="section-group-title">Essay Templates</span>
+        <div class="divider"></div>
+        <span class="section-group-count">5 templates</span>
+      </div>
+
+      <div class="templates-grid">
+
+        <!-- 1. Academic Essay -->
+        <div class="tpl-card" data-type="essay">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-essay">📚</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Essay · 01</div>
+              <div class="tpl-name">Academic Essay</div>
+              <span class="tpl-tag tag-essay">Formal</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Introduction</strong> — Hook, background & thesis</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Body ×3</strong> — Topic, evidence & analysis</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Counterargument</strong> — Rebuttal paragraph</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Conclusion</strong> — Thesis restatement & CTA</span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Introduction</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Hook statement</li>
+              <li class="tpl-sub-item">Background context</li>
+              <li class="tpl-sub-item">Thesis statement (main argument)</li>
+            </ul>
+            <p class="tpl-sub-heading">Body Paragraph 1</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Topic sentence</li>
+              <li class="tpl-sub-item">Explanation</li>
+              <li class="tpl-sub-item">Example / Evidence</li>
+              <li class="tpl-sub-item">Mini conclusion</li>
+            </ul>
+            <p class="tpl-sub-heading">Body Paragraph 2</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Topic sentence</li>
+              <li class="tpl-sub-item">Explanation</li>
+              <li class="tpl-sub-item">Example / Evidence</li>
+              <li class="tpl-sub-item">Analysis</li>
+            </ul>
+            <p class="tpl-sub-heading">Body Paragraph 3 (Optional)</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Counterargument</li>
+              <li class="tpl-sub-item">Rebuttal</li>
+            </ul>
+            <p class="tpl-sub-heading">Conclusion</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Restate thesis</li>
+              <li class="tpl-sub-item">Summary of key points</li>
+              <li class="tpl-sub-item">Final thought / Call to action</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Academic Essay', 'Essay', 'Formal')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Opinion Essay -->
+        <div class="tpl-card" data-type="essay">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-essay">💭</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Essay · 02</div>
+              <div class="tpl-name">Opinion Essay</div>
+              <span class="tpl-tag tag-essay">Formal / Casual</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Introduction</strong> — Topic intro & clear opinion</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Reason 1</strong> — Main argument + example</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Reason 2</strong> — Supporting argument</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Opposing View</strong> — Counter + rebuttal</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Conclusion</strong> — Strong restatement</span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Introduction</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Introduce topic</li>
+              <li class="tpl-sub-item">State your opinion clearly</li>
+            </ul>
+            <p class="tpl-sub-heading">Paragraph 1 – Reason 1</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Main reason</li>
+              <li class="tpl-sub-item">Example or real-life case</li>
+            </ul>
+            <p class="tpl-sub-heading">Paragraph 2 – Reason 2</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Supporting argument</li>
+              <li class="tpl-sub-item">Supporting example</li>
+            </ul>
+            <p class="tpl-sub-heading">Paragraph 3 – Opposing View</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Opposing opinion</li>
+              <li class="tpl-sub-item">Why you disagree</li>
+            </ul>
+            <p class="tpl-sub-heading">Conclusion</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Strong restatement of opinion</li>
+              <li class="tpl-sub-item">Closing impact sentence</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Opinion Essay', 'Essay', 'Formal')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Narrative Essay -->
+        <div class="tpl-card" data-type="essay">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-essay">📖</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Essay · 03</div>
+              <div class="tpl-name">Narrative Essay</div>
+              <span class="tpl-tag tag-essay">Casual</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Introduction</strong> — Scene, characters & curiosity</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Rising Action</strong> — Events & emotional details</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Climax</strong> — Turning point of story</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Falling Action</strong> — What happened after</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Conclusion</strong> — Lesson & reflection</span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Introduction</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Set the scene</li>
+              <li class="tpl-sub-item">Introduce characters</li>
+              <li class="tpl-sub-item">Build curiosity</li>
+            </ul>
+            <p class="tpl-sub-heading">Rising Action</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Events leading to main moment</li>
+              <li class="tpl-sub-item">Emotional details</li>
+            </ul>
+            <p class="tpl-sub-heading">Climax</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Turning point of story</li>
+            </ul>
+            <p class="tpl-sub-heading">Falling Action</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">What happened after</li>
+            </ul>
+            <p class="tpl-sub-heading">Conclusion</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Lesson learned</li>
+              <li class="tpl-sub-item">Reflection</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Narrative Essay', 'Essay', 'Casual')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Expository Essay -->
+        <div class="tpl-card" data-type="essay">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-essay">🔍</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Essay · 04</div>
+              <div class="tpl-name">Expository Essay</div>
+              <span class="tpl-tag tag-essay">Academic</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Introduction</strong> — Definition & importance</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Body ×3</strong> — Key concepts & applications</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Conclusion</strong> — Summary & why it matters</span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Introduction</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Definition of topic</li>
+              <li class="tpl-sub-item">Importance of topic</li>
+            </ul>
+            <p class="tpl-sub-heading">Body Section 1</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Key concept 1</li>
+              <li class="tpl-sub-item">Explanation</li>
+            </ul>
+            <p class="tpl-sub-heading">Body Section 2</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Key concept 2</li>
+              <li class="tpl-sub-item">Explanation</li>
+            </ul>
+            <p class="tpl-sub-heading">Body Section 3</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Key concept 3</li>
+              <li class="tpl-sub-item">Real-world application</li>
+            </ul>
+            <p class="tpl-sub-heading">Conclusion</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Summary</li>
+              <li class="tpl-sub-item">Why it matters</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Expository Essay', 'Essay', 'Academic')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Compare & Contrast -->
+        <div class="tpl-card" data-type="essay">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-essay">⚖️</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Essay · 05</div>
+              <div class="tpl-name">Compare &amp; Contrast Essay</div>
+              <span class="tpl-tag tag-essay">Academic</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Introduction</strong> — Both subjects & thesis</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Similarities</strong> — 2 shared points</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Differences</strong> — 2 contrasting points</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Conclusion</strong> — Overall comparison</span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Introduction</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Introduce both subjects</li>
+              <li class="tpl-sub-item">Thesis statement</li>
+            </ul>
+            <p class="tpl-sub-heading">Similarities</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Similarity point 1</li>
+              <li class="tpl-sub-item">Similarity point 2</li>
+            </ul>
+            <p class="tpl-sub-heading">Differences</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Difference point 1</li>
+              <li class="tpl-sub-item">Difference point 2</li>
+            </ul>
+            <p class="tpl-sub-heading">Conclusion</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Overall comparison</li>
+              <li class="tpl-sub-item">Final judgment</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Compare & Contrast Essay', 'Essay', 'Academic')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /essay grid -->
+    </div><!-- /essay group -->
+
+    <!-- ─── DOCUMENT TEMPLATES ─── -->
+    <div class="section-group" data-group="document">
+      <div class="section-group-header">
+        <div class="section-group-icon icon-doc">📄</div>
+        <span class="section-group-title">Document Templates</span>
+        <div class="divider"></div>
+        <span class="section-group-count">5 templates</span>
+      </div>
+
+      <div class="templates-grid">
+
+        <!-- 1. Resume -->
+        <div class="tpl-card" data-type="document">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-doc">👤</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Document · 01</div>
+              <div class="tpl-name">Student Resume</div>
+              <span class="tpl-tag tag-doc">Professional</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Header</strong> — Name, contact & LinkedIn</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Objective</strong> — Career goal statement</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Education</strong> — School, year & grades</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Skills · Projects · Achievements</strong></span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Header</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Name</li>
+              <li class="tpl-sub-item">Contact Info | Email | LinkedIn</li>
+            </ul>
+            <p class="tpl-sub-heading">Objective</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Short career goal statement</li>
+            </ul>
+            <p class="tpl-sub-heading">Education</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">School/College name</li>
+              <li class="tpl-sub-item">Year | Percentage/CGPA</li>
+            </ul>
+            <p class="tpl-sub-heading">Skills</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Skill 1, Skill 2, Skill 3</li>
+            </ul>
+            <p class="tpl-sub-heading">Projects</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Project Name – Brief description</li>
+            </ul>
+            <p class="tpl-sub-heading">Achievements</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Award or certification</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Student Resume', 'Document', 'Formal')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Cover Letter -->
+        <div class="tpl-card" data-type="document">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-doc">✉️</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Document · 02</div>
+              <div class="tpl-name">Cover Letter</div>
+              <span class="tpl-tag tag-doc">Formal</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Opening</strong> — Why you're applying</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Body</strong> — Skills & experience</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Fit Paragraph</strong> — Why you're perfect</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Closing</strong> — Thank you & sign-off</span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Header</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Your Name & Date</li>
+              <li class="tpl-sub-item">To: {Company Name}</li>
+              <li class="tpl-sub-item">Dear {Hiring Manager}</li>
+            </ul>
+            <p class="tpl-sub-heading">Opening Paragraph</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Why you are applying</li>
+            </ul>
+            <p class="tpl-sub-heading">Second Paragraph</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Skills + relevant experience</li>
+            </ul>
+            <p class="tpl-sub-heading">Third Paragraph</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Why you're a perfect fit</li>
+            </ul>
+            <p class="tpl-sub-heading">Closing</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Thank you note</li>
+              <li class="tpl-sub-item">Sincerely, {Name}</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Cover Letter', 'Document', 'Formal')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Project Report -->
+        <div class="tpl-card" data-type="document">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-doc">📊</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Document · 03</div>
+              <div class="tpl-name">Project Report</div>
+              <span class="tpl-tag tag-doc">Academic</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Abstract</strong> — Short project overview</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Introduction</strong> — Problem statement</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Methodology</strong> — Tools & process</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Results & Conclusion</strong></span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Abstract</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Short project overview</li>
+            </ul>
+            <p class="tpl-sub-heading">Introduction</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Problem statement</li>
+            </ul>
+            <p class="tpl-sub-heading">Objectives</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Objective 1</li>
+              <li class="tpl-sub-item">Objective 2</li>
+            </ul>
+            <p class="tpl-sub-heading">Methodology</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Tools & process used</li>
+            </ul>
+            <p class="tpl-sub-heading">Results</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">What you achieved</li>
+            </ul>
+            <p class="tpl-sub-heading">Conclusion</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Final outcome</li>
+              <li class="tpl-sub-item">Suggested improvements</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Project Report', 'Document', 'Academic')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Business Proposal -->
+        <div class="tpl-card" data-type="document">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-doc">💼</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Document · 04</div>
+              <div class="tpl-name">Business Proposal</div>
+              <span class="tpl-tag tag-doc">Formal</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Executive Summary</strong> — Overview</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Problem & Solution</strong></span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Market Opportunity</strong> — Audience</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Budget & Conclusion</strong></span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Executive Summary</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Overview of proposal</li>
+            </ul>
+            <p class="tpl-sub-heading">Problem</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">What issue exists</li>
+            </ul>
+            <p class="tpl-sub-heading">Solution</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Your proposed solution</li>
+            </ul>
+            <p class="tpl-sub-heading">Market Opportunity</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Target audience</li>
+            </ul>
+            <p class="tpl-sub-heading">Budget</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Cost breakdown</li>
+            </ul>
+            <p class="tpl-sub-heading">Conclusion</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Call to action</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Business Proposal', 'Document', 'Formal')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Formal Letter -->
+        <div class="tpl-card" data-type="document">
+          <div class="tpl-stripe"></div>
+          <div class="tpl-head">
+            <div class="tpl-emoji-wrap icon-doc">📬</div>
+            <div class="tpl-meta">
+              <div class="tpl-number">Document · 05</div>
+              <div class="tpl-name">Formal Letter</div>
+              <span class="tpl-tag tag-doc">Formal</span>
+            </div>
+          </div>
+          <div class="tpl-body">
+            <div class="tpl-divider"></div>
+            <div class="tpl-sections">
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Header</strong> — Address, date & recipient</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Subject Line</strong></span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Body</strong> — Main content paragraphs</span></div>
+              <div class="tpl-section-row"><span class="tpl-dot"></span><span class="tpl-section-name"><strong>Sign-off</strong> — Yours sincerely</span></div>
+            </div>
+          </div>
+          <button class="tpl-expand-btn" onclick="toggleDetail(this)">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            View full structure
+          </button>
+          <div class="tpl-detail">
+            <p class="tpl-sub-heading">Header</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Your address</li>
+              <li class="tpl-sub-item">Date</li>
+              <li class="tpl-sub-item">To: {Recipient Name}</li>
+            </ul>
+            <p class="tpl-sub-heading">Subject</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Subject: {Subject Line}</li>
+            </ul>
+            <p class="tpl-sub-heading">Salutation</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Respected Sir/Madam,</li>
+            </ul>
+            <p class="tpl-sub-heading">Body</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Main content paragraph</li>
+              <li class="tpl-sub-item">Second paragraph</li>
+            </ul>
+            <p class="tpl-sub-heading">Sign-off</p>
+            <ul class="tpl-sub-list">
+              <li class="tpl-sub-item">Thanking you,</li>
+              <li class="tpl-sub-item">Yours sincerely, {Name}</li>
+            </ul>
+          </div>
+          <div class="tpl-footer">
+            <button class="btn-use-template" onclick="useTemplate('Formal Letter', 'Document', 'Formal')">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Use this Template
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /doc grid -->
+    </div><!-- /doc group -->
+
+  </main>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-card">
+      <h2 class="cta-title">Ready to use a template?</h2>
+      <p class="cta-sub">Select any template above — it'll pre-fill the generator for you instantly.</p>
+      <a href="generate.html" class="btn-primary">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Open Generator
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Scribr AI</div>
+    <span class="footer-copy">© 2025 Scribr AI. All rights reserved.</span>
+    <ul class="footer-links">
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    // ── Scroll reveal for cards
+    const cards = document.querySelectorAll('.tpl-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, idx) => {
+        if (entry.isIntersecting) {
+          const siblings = [...entry.target.parentElement.querySelectorAll('.tpl-card')];
+          const delay = siblings.indexOf(entry.target) * 90;
+          setTimeout(() => entry.target.classList.add('visible'), delay);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    cards.forEach(card => observer.observe(card));
+
+    // ── Expand / collapse structure
+    function toggleDetail(btn) {
+      const detail = btn.nextElementSibling;
+      const isOpen = detail.classList.contains('open');
+      detail.classList.toggle('open');
+      btn.classList.toggle('open');
+      btn.querySelector('span') && null;
+      const textNode = [...btn.childNodes].find(n => n.nodeType === 3);
+      if (textNode) textNode.textContent = isOpen ? ' View full structure' : ' Hide structure';
+    }
+
+    // ── Filter tabs
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const essayGroup = document.querySelector('[data-group="essay"]');
+    const docGroup   = document.querySelector('[data-group="document"]');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+
+        essayGroup.style.display = (filter === 'all' || filter === 'essay')    ? '' : 'none';
+        docGroup.style.display   = (filter === 'all' || filter === 'document') ? '' : 'none';
+      });
+    });
+
+    // ── "Use this Template" → redirect to generate page with pre-fill via URL params
+    function useTemplate(name, type, tone) {
+      const params = new URLSearchParams({ template: name, contentType: type, tone });
+      window.location.href = `generate.html?${params.toString()}`;
+    }
+  </script>
+</body>
+</html>
