@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scripter AI – Generate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary:    #0f172a;
+      --bg-secondary:  #1e293b;
+      --bg-card:       #1e293b;
+      --border-color:  #334155;
+      --text-primary:  #f1f5f9;
+      --text-secondary:#94a3b8;
+      --accent:        #3b82f6;
+      --accent-hover:  #2563eb;
+      --purple:        #8b5cf6;
+      --success:       #10b981;
+      --error:         #ef4444;
+      --shadow:        rgba(0,0,0,0.3);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ══════════════════════════════
+       NAV
+    ══════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 6%;
+      background: rgba(15,23,42,0.75);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(51,65,85,0.4);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.35rem;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-back {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover { color: var(--text-primary); }
+
+    .nav-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 100px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
+      color: #93c5fd;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-dot {
+      width: 5px; height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.65); }
+    }
+
+    /* ══════════════════════════════
+       PAGE WRAPPER
+    ══════════════════════════════ */
+    .page {
+      position: relative;
+      min-height: 100vh;
+      padding: 8rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      z-index: 1;
+    }
+
+    /* Ambient blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.11;
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+
+    .blob-1 { width: 600px; height: 600px; background: var(--accent);  top: -180px; left: -160px; animation-delay: 0s; }
+    .blob-2 { width: 500px; height: 500px; background: var(--purple); bottom: -160px; right: -120px; animation-delay: -5s; }
+
+    @keyframes drift {
+      0%   { transform: translate(0,0) scale(1); }
+      50%  { transform: translate(30px,-25px) scale(1.04); }
+      100% { transform: translate(-15px,25px) scale(0.97); }
+    }
+
+    /* ══════════════════════════════
+       CARD
+    ══════════════════════════════ */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 700px;
+      position: relative;
+      z-index: 1;
+      box-shadow:
+        0 30px 80px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(59,130,246,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      animation: fadeUp 0.6s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Subtle glow at top of card */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59,130,246,0.4), transparent);
+    }
+
+    /* ── Card Header ── */
+    .card-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(51,65,85,0.5);
+    }
+
+    .card-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2));
+      border: 1px solid rgba(59,130,246,0.2);
+      font-size: 1.6rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--text-primary), #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      font-weight: 300;
+    }
+
+    /* ══════════════════════════════
+       FORM
+    ══════════════════════════════ */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Two-column row for type + tone */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    select,
+    input[type="number"],
+    textarea {
+      padding: 0.875rem 1rem;
+      background: rgba(15,23,42,0.6);
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+
+    select:focus,
+    input[type="number"]:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      background: rgba(59,130,246,0.04);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+    }
+
+    select:hover,
+    input[type="number"]:hover,
+    textarea:hover {
+      border-color: rgba(59,130,246,0.45);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.6;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 3rem;
+    }
+
+    /* Word limit helper row */
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.2rem;
+      font-weight: 300;
+    }
+
+    /* ── Generate Button ── */
+    .btn-generate {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+      box-shadow: 0 6px 25px rgba(59,130,246,0.3);
+      transition: transform 0.25s, box-shadow 0.25s, opacity 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-generate::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn-generate:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(59,130,246,0.45);
+    }
+
+    .btn-generate:hover:not(:disabled)::after { opacity: 1; }
+
+    .btn-generate:active:not(:disabled) { transform: translateY(0); }
+
+    .btn-generate:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    /* Spinner */
+    .loader {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.75s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ══════════════════════════════
+       OUTPUT SECTION
+    ══════════════════════════════ */
+    .output-section {
+      margin-top: 2rem;
+      border-top: 1px solid rgba(51,65,85,0.5);
+      padding-top: 2rem;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .output-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .output-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .output-tag {
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.25);
+      color: #34d399;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.18rem 0.65rem;
+      border-radius: 100px;
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn-action {
+      background: rgba(15,23,42,0.6);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .btn-action:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+      background: rgba(59,130,246,0.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-action svg { flex-shrink: 0; }
+
+    /* Output box */
+    .output {
+      background: rgba(15,23,42,0.55);
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.75rem;
+      line-height: 1.85;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-height: 560px;
+      overflow-y: auto;
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+
+    .output::-webkit-scrollbar          { width: 6px; }
+    .output::-webkit-scrollbar-track    { background: transparent; }
+    .output::-webkit-scrollbar-thumb    { background: var(--border-color); border-radius: 4px; }
+    .output::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    .output h1, .output h2, .output h3 {
+      font-family: 'Syne', sans-serif;
+      color: var(--text-primary);
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    .output h1 { font-size: 1.5rem; margin-top: 0; }
+    .output h2 { font-size: 1.2rem; }
+    .output h3 { font-size: 1rem; }
+    .output p  { margin-bottom: 1rem; }
+
+    /* ══════════════════════════════
+       ERROR SECTION
+    ══════════════════════════════ */
+    .error-section {
+      margin-top: 1.5rem;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .error-message {
+      background: rgba(239,68,68,0.08);
+      border: 1.5px solid rgba(239,68,68,0.3);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #fca5a5;
+      font-size: 0.9rem;
+    }
+
+    .error-message svg { flex-shrink: 0; stroke: var(--error); }
+
+    /* ══════════════════════════════
+       WORD COUNT PILL
+    ══════════════════════════════ */
+    .word-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      background: rgba(51,65,85,0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 100px;
+      padding: 0.2rem 0.75rem;
+      margin-left: 0.5rem;
+    }
+
+    /* ══════════════════════════════
+       BOTTOM SECTION FOOTER
+    ══════════════════════════════ */
+    .page-footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      opacity: 0.6;
+      z-index: 1;
+      position: relative;
+    }
+
+    .page-footer a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    .page-footer a:hover { text-decoration: underline; }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 600px) {
+      .card { padding: 2rem 1.25rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .output-header { flex-direction: column; align-items: flex-start; }
+      .output-actions { width: 100%; }
+      .btn-action { flex: 1; justify-content: center; }
+      nav { padding: 1rem 5%; }
+      .nav-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Scribr AI</a>
+    <div class="nav-right">
+      <a href="index.html" class="nav-back">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to home
+      </a>
+      <div class="nav-badge">
+        <span class="badge-dot"></span>
+        AI Ready
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE -->
+  <main class="page">
+    <div class="card">
+
+      <!-- Header -->
+      <div class="card-header">
+        <div class="card-icon">✍️</div>
+        <h1 class="card-title">Content Generator</h1>
+        <p class="card-subtitle">Fill in the details below and let AI write for you</p>
+      </div>
+
+      <!-- Form -->
+      <form id="scriptForm" class="form">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contentType">Content Type</label>
+            <select id="contentType" name="contentType" required>
+              <option value="">Select type...</option>
+              <option value="Essay">Essay</option>
+              <option value="Document">Document</option>
+              <option value="Story">Story</option>
+              <option value="Speech">Speech</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="tone">Tone</label>
+            <select id="tone" name="tone" required>
+              <option value="">Select tone...</option>
+              <option value="Formal">Formal</option>
+              <option value="Casual">Casual</option>
+              <option value="Academic">Academic</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="wordLimit">Word Limit</label>
+          <input
+            type="number"
+            id="wordLimit"
+            name="wordLimit"
+            placeholder="e.g. 500"
+            min="50"
+            max="2000"
+            required
+          />
+          <span class="input-hint">Between 50 and 2,000 words</span>
+        </div>
+
+        <div class="form-group">
+          <label for="topic">Topic / Prompt</label>
+          <textarea
+            id="topic"
+            name="topic"
+            rows="4"
+            placeholder="Describe what you want to write about..."
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn-generate" id="generateBtn">
+          <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span class="btn-text">Generate Content</span>
+          <span class="loader" style="display:none;"></span>
+        </button>
+
+      </form>
+
+      <!-- Output -->
+      <div id="outputSection" class="output-section" style="display:none;">
+        <div class="output-header">
+          <div class="output-title-row">
+            <span class="output-title">Generated Content</span>
+            <span class="output-tag">Done</span>
+          </div>
+          <div class="output-actions">
+            <button id="copyBtn" class="btn-action">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Copy
+            </button>
+            <button id="downloadBtn" class="btn-action">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download
+            </button>
+          </div>
+        </div>
+        <div id="output" class="output"></div>
+      </div>
+
+      <!-- Error -->
+      <div id="errorSection" class="error-section" style="display:none;">
+        <div class="error-message">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span id="errorMessage"></span>
+        </div>
+      </div>
+
+    </div><!-- /card -->
+
+    <p class="page-footer">
+      Powered by Scripter AI · <a href="index.html">← Back to home</a>
+    </p>
+  </main>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
